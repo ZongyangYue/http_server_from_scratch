@@ -39,6 +39,12 @@ namespace http
             exitWithError("Cannot create socket");
             return 1;
         }
+
+        if (bind(m_socket, (sockaddr *)&m_socketAddress, m_socketAddress_len) < 0)
+        {
+            exitWithError("Cannot connect socket to address");
+            return 1;
+        }
         return 0;
     }
 
