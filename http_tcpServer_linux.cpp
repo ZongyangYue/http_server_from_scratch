@@ -1,5 +1,6 @@
 #include <http_tcpServer_linux.h>
 #include <iostream>
+#include <unistd.h>
 
 namespace
 {
@@ -84,12 +85,16 @@ namespace http
             std::ostringstream ss;
             ss << "------ Received Request from client ------\n\n";
             log(ss.str());
+
+            sendResponse();
+
+            close(m_new_socket);
         }
     }
 
     void TcpServer::acceptConnection(int &new_socket)
     {
-        new_socket = accept(m_socket, (sockaddr *)&m_socketAddress, &m_socketAdress_len);
+        new_socket = accept(m_socket, (sockaddr *)&m_socketAddress, &m_socketAddress_len);
         if (new_socket < 0)
         {
             std::ostringstream ss;
@@ -97,6 +102,32 @@ namespace http
                << inet_ntoa(m_socketAddress.sin_addr) << "; PORT: "
                << ntohs(m_socketAddress.sin_port);
             exitWithError(ss.str());
+        }
+    }
+
+    std::string TcpServer::buildReponse()
+    {
+        std::string htmlFile = "<!DOCTYPE html><html lang=\"en\"><body><h1> HOME </h1><p> Hello from your Server :) </p></body></html>";
+        std::ostringstream ss;
+        ss << "HTTP/1.1 200 OK\nContent-Type: text/html\nContent-Length: " << htmlFile.size() << "\n\n"
+           << htmlFile;
+
+        return ss.str();
+    }
+
+    void TcpServer::sendResponse()
+    {
+        long bytesSent;
+
+        bytesSent = write(m_new_socket, m_serverMessage.c_str(), m_serverMessage.size());
+
+        if (bytesSent == m_serverMessage.size())
+        {
+            log("------ Server Response sent to client ------\n\n");
+        }
+        else
+        {
+            log("Error sending response to client");
         }
     }
 
