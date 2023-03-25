@@ -3,6 +3,8 @@
 
 namespace
 {
+    const int BUFFER_SIZE = 30720;
+
     void log(const std::string &message)
     {
         std::cout << message << std::endl;
@@ -64,6 +66,25 @@ namespace http
            << " PORT: " << ntohs(m_socketAddress.sin_port)
            << "***\n\n";
         log(ss.str());
+
+        int bytesReceived;
+
+        while (true)
+        {
+            log("====== Waiting for a new connection ======\n\n\n");
+            acceptConnection(m_new_socket);
+
+            char buffer[BUFFER_SIZE] = {0};
+            bytesReceived = read(m_new_socket, buffer, BUFFER_SIZE);
+            if (bytesReceived < 0)
+            {
+                exitWithError("Failed to read bytes from client socket connection");
+            }
+
+            std::ostringstream ss;
+            ss << "------ Received Request from client ------\n\n";
+            log(ss.str());
+        }
     }
 
     void TcpServer::acceptConnection(int &new_socket)

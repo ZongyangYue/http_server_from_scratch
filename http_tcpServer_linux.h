@@ -30,6 +30,7 @@ namespace http
 
         int startServer();
         void closeServer();
+        void acceptConnection(int &new_socket);
     };
 } // namespace http
 #endif
