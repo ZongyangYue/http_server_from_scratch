@@ -1,9 +1,11 @@
 #ifndef INCLUDED_HTTP_TCPSERVER_LINUX
 #define INCLUDED_HTTP_TCPSERVER_LINUX
 
+#include <stdio.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <string>
+#include <stdlib.h>
 
 namespace http
 {
