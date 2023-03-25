@@ -18,6 +18,7 @@ namespace http
 {
     TcpServer::TcpServer()
     {
+        startServer();
     }
     int TcpServer::startServer()
     {
@@ -43,5 +44,6 @@ namespace http
     TcpServer::~TcpServer()
     {
         // Close a socket in the destructor
+        closeServer();
     }
 } // namespace http
