@@ -14,6 +14,7 @@ namespace http
     public:
         TcpServer(std::string ip_address, int port);
         ~TcpServer();
+        void startListen();
 
     private:
         std::string m_ip_address;

@@ -48,6 +48,24 @@ namespace http
         return 0;
     }
 
+    void TcpServer::startListen()
+    {
+        // listen(sockfd, backlog)
+        // backlog is the maximum number of connection threads we want to be able to hold
+        // at once, when the queue is full, they will get rejected by the server
+        if (listen(m_socket, 20) < 0)
+        {
+            exitWithError("Socket listen failed");
+        }
+
+        std::ostringstream ss;
+        ss << "\n*** Listening on ADDRESS: "
+           << inet_ntoa(m_socketAddress.sin_addr)
+           << " PORT: " << ntohs(m_socketAddress.sin_port)
+           << "***\n\n";
+        log(ss.str());
+    }
+
     void TcpServer::closeServer()
     {
         close(m_socket);
